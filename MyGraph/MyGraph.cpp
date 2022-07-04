@@ -75,6 +75,22 @@ public:
         else return false;
     }
 
+    //Удаление имени вершины (из convert). Возвращает true, если удаление удалось, и false в ином случае
+    bool delVertex(int vert)
+    {
+        if (convert.contains(vert))
+        {
+            for (auto& it : convert) //удаляем все ребра связанные с этой вершиной
+            {
+                delEdge(vert, it.first);
+                delEdge(it.first, vert);
+            }
+            convert.erase(vert); //затем удаляем саму вершину
+            return true;
+        }
+        else return false;
+    }
+
     //Добавление ребер в матрицу смежности. Возвращает true, если добавление удалось, и false в ином случае
     bool addEdge(int vert1, int vert2, int weight)
     {
@@ -87,6 +103,14 @@ public:
         }
         else return false;
     }
+
+    bool delEdge(int vert1, int vert2)
+    {
+        if (convert.contains(vert1) && convert.contains(vert2))
+        adjMatrix[convert[vert1]][convert[vert2]]._exists = false;
+        adjMatrix[convert[vert1]][convert[vert2]]._weight = INT_MAX;
+    }
+
 
     void BFS(const int vert1, const int vert2)
     {
